@@ -1,0 +1,14 @@
+[variables]
+ASPNETCORE_URLS = "http://+:5020"
+
+[phases.setup]
+nixPkgs = ['dotnet-sdk_9', 'nodejs_22']
+
+[phases.install]
+cmds = ['dotnet restore backend/TurismoPDF.Backend.csproj']
+
+[phases.build]
+cmds = ['dotnet publish backend/TurismoPDF.Backend.csproj -c Release -o /app/out']
+
+[start]
+cmd = 'dotnet /app/out/TurismoPDF.Backend.dll'
