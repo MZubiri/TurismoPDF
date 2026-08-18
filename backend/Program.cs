@@ -115,7 +115,7 @@ using (var scope = app.Services.CreateScope())
         {
             PhoneNumber = "+52 624 123 4567",
             Email = "info@toursgotravel.com",
-            Website = "www.ToursGoTravel.com"
+            Website = "https://reservas.toursgotravel.com"
         });
         context.SaveChanges();
     }
