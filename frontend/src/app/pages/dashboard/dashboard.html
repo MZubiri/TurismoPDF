@@ -1,0 +1,23 @@
+<div class="dashboard-container">
+  <h1 class="navy-text mb-4">Dashboard</h1>
+  <div class="cards-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <h3 class="gold-text">Total Reservas</h3>
+        <p class="stat-value">{{totalReservations()}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <h3 class="gold-text">Destinos Activos</h3>
+        <p class="stat-value">{{totalDestinations()}}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <h3 class="gold-text">Actividades</h3>
+        <p class="stat-value">{{totalActivities()}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

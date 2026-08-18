@@ -1,0 +1,43 @@
+.list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  button {
+    transition: transform 0.15s ease;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.btn-flag {
+  font-size: 1.2rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+
+  &:hover {
+    background: #e2e8f0;
+  }
+}

@@ -1,0 +1,43 @@
+<div class="form-container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title class="navy-text">{{id ? 'Editar' : 'Nueva'}} Actividad</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="mt-4">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Duración</mat-label>
+          <input matInput formControlName="duration">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Destino</mat-label>
+          <mat-select formControlName="destinationId">
+            @for (dest of destinations; track dest.id) {
+              <mat-option [value]="dest.id">{{dest.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="mb-4">
+          <mat-slide-toggle formControlName="isActive" color="primary">Activo</mat-slide-toggle>
+        </div>
+
+        <div class="actions">
+          <button mat-button type="button" routerLink="/activities">Cancelar</button>
+          <button mat-raised-button class="gold-button" type="submit" [disabled]="form.invalid">Guardar</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

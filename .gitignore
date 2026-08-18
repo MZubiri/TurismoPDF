@@ -1,0 +1,17 @@
+# .NET
+backend/bin/
+backend/obj/
+backend/App_Data/
+*.user
+*.suo
+
+# Angular / Node
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.nx/
+
+# OS / Temporary
+.DS_Store
+Thumbs.db
+*.log

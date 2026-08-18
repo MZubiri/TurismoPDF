@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gotravel-backend
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5020
+      - ADMIN_EMAIL=admin@toursgotravel.com
+      - ADMIN_PASSWORD=Admin123!
+    ports:
+      - "5020:5020"
+    volumes:
+      - backend-data:/app/data
+      - backend-pdfs:/app/pdfs
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: gotravel-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  backend-data:
+  backend-pdfs:

@@ -1,0 +1,29 @@
+<div class="form-container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title class="navy-text">Datos PDF</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="mt-4">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="phone">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Correo</mat-label>
+          <input matInput formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Web</mat-label>
+          <input matInput formControlName="website">
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-raised-button class="gold-button" type="submit" [disabled]="form.invalid">Guardar</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

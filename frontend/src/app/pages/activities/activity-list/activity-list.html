@@ -1,0 +1,57 @@
+<div class="list-container">
+  <div class="header-row">
+    <h1 class="navy-text">Actividades</h1>
+    <button mat-raised-button class="gold-button" routerLink="/activities/new">
+      <mat-icon>add</mat-icon> Nueva Actividad
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Filtrar por Destino</mat-label>
+    <mat-select (selectionChange)="onDestinationChange($event.value)">
+      <mat-option [value]="null">Todos</mat-option>
+      @for (dest of destinations(); track dest.id) {
+        <mat-option [value]="dest.id">{{dest.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  
+  <table mat-table [dataSource]="activities()" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="destination">
+      <th mat-header-cell *matHeaderCellDef> Destino </th>
+      <td mat-cell *matCellDef="let element"> {{element.destination?.name || 'N/A'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef> Duración </th>
+      <td mat-cell *matCellDef="let element"> {{element.duration}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isActive">
+      <th mat-header-cell *matHeaderCellDef> Activo </th>
+      <td mat-cell *matCellDef="let element"> 
+        <mat-slide-toggle [checked]="element.isActive" disabled></mat-slide-toggle>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" [routerLink]="['/activities/edit', element.id]">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteActivity(element.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
