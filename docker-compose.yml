@@ -3,15 +3,12 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: gotravel-backend
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:5020
       - ADMIN_EMAIL=admin@toursgotravel.com
       - ADMIN_PASSWORD=Admin123!
-    ports:
-      - "5020:5020"
     volumes:
       - backend-data:/app/data
       - backend-pdfs:/app/pdfs
@@ -22,26 +19,14 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: gotravel-frontend
     restart: always
-    ports:
-      - "8085:80"
     depends_on:
       - backend
     networks:
       - gotravel-net
-      - coolify
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.gotravel.rule=Host(`reservas.toursgotravel.com`)"
-      - "traefik.http.routers.gotravel.entrypoints=http,https"
-      - "traefik.http.routers.gotravel.tls.certresolver=letsencrypt"
-      - "traefik.http.services.gotravel.loadbalancer.server.port=80"
 
 networks:
   gotravel-net:
-  coolify:
-    external: true
 
 volumes:
   backend-data:
