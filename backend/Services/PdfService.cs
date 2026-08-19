@@ -60,7 +60,9 @@ namespace TurismoPDF.Backend.Services
             const float disclaimerFontSize = 8.5f; // Disclaimers & Legal Terms (LARGE)
 
             // Load images
-            var logoPath = Path.Combine(_env.WebRootPath, "images", "logo.jpg");
+            var logoPngPath = Path.Combine(_env.WebRootPath, "images", "logo.png");
+            var logoJpgPath = Path.Combine(_env.WebRootPath, "images", "logo.jpg");
+            var logoPath = File.Exists(logoPngPath) ? logoPngPath : logoJpgPath;
             var subtleBgPath = Path.Combine(_env.WebRootPath, "images", "subtle_beach_bg.png");
             byte[]? logoBytes = File.Exists(logoPath) ? File.ReadAllBytes(logoPath) : null;
             byte[]? subtleBgBytes = File.Exists(subtleBgPath) ? File.ReadAllBytes(subtleBgPath) : null;
@@ -104,7 +106,7 @@ namespace TurismoPDF.Backend.Services
                             {
                                 if (logoBytes != null)
                                 {
-                                    logoRow.ConstantItem(48).Height(48).Image(logoBytes);
+                                    logoRow.ConstantItem(60).Height(60).Image(logoBytes);
                                     logoRow.ConstantItem(12);
                                 }
                                 logoRow.RelativeItem().Column(col =>

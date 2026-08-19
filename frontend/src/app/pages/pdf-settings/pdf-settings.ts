@@ -22,7 +22,7 @@ export class PdfSettingsComponent {
   private cdr = inject(ChangeDetectorRef);
 
   form = this.fb.group({
-    phone: ['', Validators.required],
+    phoneNumber: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     website: ['', Validators.required]
   });
@@ -30,7 +30,13 @@ export class PdfSettingsComponent {
   ngOnInit() {
     this.pdfService.get().subscribe({
       next: (data) => {
-        if(data) this.form.patchValue(data);
+        if(data) {
+          this.form.patchValue({
+            phoneNumber: data.phoneNumber || data.phone || '',
+            email: data.email || '',
+            website: data.website || ''
+          });
+        }
         this.cdr.markForCheck();
       }
     });
