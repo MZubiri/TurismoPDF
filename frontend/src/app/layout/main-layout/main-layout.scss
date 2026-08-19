@@ -105,4 +105,8 @@
   box-sizing: border-box;
   overflow-y: auto;
   background-color: var(--bg-page);
+
+  @media (max-width: 768px) {
+    padding: 16px 12px;
+  }
 }

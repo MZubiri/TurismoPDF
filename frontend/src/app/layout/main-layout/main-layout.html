@@ -1,32 +1,32 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+  <mat-sidenav #sidenav [mode]="sidenavMode" [opened]="isOpened" class="sidenav">
     <div class="logo-container">
       <img src="assets/logo.png" alt="GoTravel" style="width: 72px; height: 72px; border-radius: 14px; object-fit: contain; background: #0F172A; padding: 4px; border: 1px solid #D4A853; margin-bottom: 8px;">
       <h2 class="gold-gradient-text">Gestión de Reservas</h2>
     </div>
 
     <div class="nav-list">
-      <a routerLink="/dashboard" routerLinkActive="active-link" class="nav-item">
+      <a routerLink="/dashboard" routerLinkActive="active-link" (click)="onNavItemClick(sidenav)" class="nav-item">
         <mat-icon class="nav-icon">dashboard</mat-icon>
         <span class="nav-label">Dashboard</span>
       </a>
-      <a routerLink="/destinations" routerLinkActive="active-link" class="nav-item">
+      <a routerLink="/destinations" routerLinkActive="active-link" (click)="onNavItemClick(sidenav)" class="nav-item">
         <mat-icon class="nav-icon">place</mat-icon>
         <span class="nav-label">Destinos</span>
       </a>
-      <a routerLink="/activities" routerLinkActive="active-link" class="nav-item">
+      <a routerLink="/activities" routerLinkActive="active-link" (click)="onNavItemClick(sidenav)" class="nav-item">
         <mat-icon class="nav-icon">local_activity</mat-icon>
         <span class="nav-label">Actividades</span>
       </a>
-      <a routerLink="/reservations" routerLinkActive="active-link" class="nav-item">
+      <a routerLink="/reservations" routerLinkActive="active-link" (click)="onNavItemClick(sidenav)" class="nav-item">
         <mat-icon class="nav-icon">book_online</mat-icon>
         <span class="nav-label">Reservas</span>
       </a>
-      <a routerLink="/pdf-settings" routerLinkActive="active-link" class="nav-item">
+      <a routerLink="/pdf-settings" routerLinkActive="active-link" (click)="onNavItemClick(sidenav)" class="nav-item">
         <mat-icon class="nav-icon">settings</mat-icon>
         <span class="nav-label">Datos PDF</span>
       </a>
-      <a routerLink="/change-password" routerLinkActive="active-link" class="nav-item">
+      <a routerLink="/change-password" routerLinkActive="active-link" (click)="onNavItemClick(sidenav)" class="nav-item">
         <mat-icon class="nav-icon">lock</mat-icon>
         <span class="nav-label">Cambiar Contraseña</span>
       </a>
