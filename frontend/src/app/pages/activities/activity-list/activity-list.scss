@@ -1,5 +1,10 @@
-.list-container { padding: 1rem; }
-.header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-.navy-text { color: var(--primary-navy); margin: 0; }
-.filter-field { width: 300px; margin-bottom: 1rem; }
-table { width: 100%; }
+.list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.filter-field {
+  width: 320px;
+  max-width: 100%;
+  margin-bottom: 1.25rem;
+}
