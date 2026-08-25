@@ -45,7 +45,7 @@ export class ReservationListComponent {
     const isEs = lang === 'es';
     const year = new Date(reservation.createdAt || Date.now()).getFullYear();
     const cleanFolio = `GT-${year}-${String(reservation.id).padStart(5, '0')}`;
-    const voucherUrl = `https://reservas.toursgotravel.com/api/reservations/voucher/${reservation.id}?lang=${lang}`;
+    const voucherUrl = `https://reservas.toursgotravel.com/api/reservations/${reservation.id}/pdf?lang=${lang}`;
     
     const tourName = reservation.activity?.name || 'su tour';
     const dateStr = reservation.reservationDate || '';
