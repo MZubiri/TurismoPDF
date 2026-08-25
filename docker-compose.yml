@@ -12,8 +12,6 @@ services:
     volumes:
       - backend-data:/app/data
       - backend-pdfs:/app/pdfs
-    networks:
-      - gotravel-net
 
   frontend:
     build:
@@ -22,11 +20,6 @@ services:
     restart: always
     depends_on:
       - backend
-    networks:
-      - gotravel-net
-
-networks:
-  gotravel-net:
 
 volumes:
   backend-data:
