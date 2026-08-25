@@ -42,23 +42,12 @@ export class ReservationListComponent {
   }
 
   shareWhatsApp(reservation: any, lang: string = 'es') {
-    const isEs = lang === 'es';
-    const year = new Date(reservation.createdAt || Date.now()).getFullYear();
-    const cleanFolio = `GT-${year}-${String(reservation.id).padStart(5, '0')}`;
     const voucherUrl = `https://reservas.toursgotravel.com/api/reservations/${reservation.id}/pdf?lang=${lang}`;
-    
-    const tourName = reservation.activity?.name || 'su tour';
-    const dateStr = reservation.reservationDate || '';
-    
-    const message = isEs
-      ? `¡Hola ${reservation.firstName}! Te compartimos el Voucher de tu reserva (${cleanFolio}) con ToursGoTravel para *${tourName}* el día ${dateStr}.\n\nPuedes consultar y descargar tu comprobante aquí:\n${voucherUrl}`
-      : `Hello ${reservation.firstName}! Here is your booking voucher (${cleanFolio}) with ToursGoTravel for *${tourName}* on ${dateStr}.\n\nYou can view and download your voucher here:\n${voucherUrl}`;
-
     let cleanPhone = (reservation.phone || '').replace(/[^0-9]/g, '');
     
     const waUrl = cleanPhone.length >= 10
-      ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(message)}`
-      : `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+      ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(voucherUrl)}`
+      : `https://api.whatsapp.com/send?text=${encodeURIComponent(voucherUrl)}`;
 
     window.open(waUrl, '_blank');
   }
