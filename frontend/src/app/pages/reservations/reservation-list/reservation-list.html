@@ -48,8 +48,11 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button (click)="shareWhatsApp(element, 'es')" title="Enviar Voucher por WhatsApp" style="color: #25D366;">
+          <button mat-icon-button (click)="sendClientWhatsApp(element)" title="Enviar Confirmación por WhatsApp al Cliente" style="color: #25D366;">
             <mat-icon>chat</mat-icon>
+          </button>
+          <button mat-icon-button (click)="shareWhatsApp(element, 'es')" title="Compartir solo Enlace de PDF (WhatsApp)" style="color: #00A896;">
+            <mat-icon>link</mat-icon>
           </button>
           <button mat-icon-button color="primary" [routerLink]="['/reservations/edit', element.id]" title="Editar Reserva">
             <mat-icon>edit</mat-icon>

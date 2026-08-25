@@ -41,9 +41,56 @@ export class ReservationListComponent {
     this.resService.downloadPdf(id, lang);
   }
 
+  sendClientWhatsApp(reservation: any) {
+    const name = `${reservation.firstName || ''} ${reservation.lastName || ''}`.trim() || 'Cliente';
+    const tour = reservation.activity?.name || 'Tour';
+    const destination = reservation.destination?.name ? `${reservation.destination.name}` : '';
+    const tourWithDest = destination ? `${tour} (${destination})` : tour;
+    
+    let formattedDate = reservation.reservationDate || '';
+    if (reservation.reservationDate && typeof reservation.reservationDate === 'string' && reservation.reservationDate.includes('-')) {
+      const parts = reservation.reservationDate.split('-');
+      if (parts.length === 3) {
+        formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+    }
+
+    const hotel = reservation.hotel || 'No especificado';
+    const notes = reservation.notes ? reservation.notes.trim() : 'Ninguna';
+    const voucherUrl = `https://reservas.toursgotravel.com/api/reservations/${reservation.id}/pdf?lang=es`;
+
+    const message = `¡Hola ${name}! 🌊✨
+¡Gracias por reservar con ToursGoTravel!
+
+Confirmamos tu reserva:
+• Tour: ${tourWithDest}
+• Fecha: ${formattedDate}
+• Hotel / Punto de partida: ${hotel}
+• Notas: ${notes}
+
+📄 Tu Voucher de acceso:
+${voucherUrl}
+
+¡Estamos a tu disposición para cualquier duda antes de tu tour!`;
+
+    let cleanPhone = (reservation.phone || '').replace(/[^0-9]/g, '');
+    if (cleanPhone.length === 10) {
+      cleanPhone = '52' + cleanPhone;
+    }
+
+    const waUrl = cleanPhone.length >= 10
+      ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(message)}`
+      : `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+
+    window.open(waUrl, '_blank');
+  }
+
   shareWhatsApp(reservation: any, lang: string = 'es') {
     const voucherUrl = `https://reservas.toursgotravel.com/api/reservations/${reservation.id}/pdf?lang=${lang}`;
     let cleanPhone = (reservation.phone || '').replace(/[^0-9]/g, '');
+    if (cleanPhone.length === 10) {
+      cleanPhone = '52' + cleanPhone;
+    }
     
     const waUrl = cleanPhone.length >= 10
       ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(voucherUrl)}`
