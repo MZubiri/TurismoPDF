@@ -37,8 +37,19 @@ if (provider.Equals("MySql", StringComparison.OrdinalIgnoreCase) && !string.IsNu
 }
 else
 {
+    var dataDir = Path.Combine(builder.Environment.ContentRootPath, "data");
+    if (!Directory.Exists(dataDir)) Directory.CreateDirectory(dataDir);
+    
+    var dbPath = Path.Combine(dataDir, "gotravel.db");
+    var rootDbPath = Path.Combine(builder.Environment.ContentRootPath, "gotravel.db");
+    
+    if (!File.Exists(dbPath) && File.Exists(rootDbPath))
+    {
+        try { File.Copy(rootDbPath, dbPath, true); } catch { }
+    }
+
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlite("Data Source=gotravel.db"));
+        options.UseSqlite($"Data Source={dbPath}"));
 }
 
 // Configure JWT Authentication
