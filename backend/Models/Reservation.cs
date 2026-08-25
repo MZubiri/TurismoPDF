@@ -30,7 +30,9 @@ namespace TurismoPDF.Backend.Models
         public string? Notes { get; set; }
         
         public int Adults { get; set; }
+        public decimal? AdultPrice { get; set; }
         public int Children { get; set; }
+        public decimal? ChildPrice { get; set; }
         
         public string? PdfFileNameEs { get; set; }
         public string? PdfFileNameEn { get; set; }

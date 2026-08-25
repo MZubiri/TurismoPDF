@@ -43,7 +43,9 @@ export class ReservationFormComponent {
     reservationDate: [null, Validators.required],
     notes: [''],
     adults: [1, [Validators.required, Validators.min(1)]],
-    children: [0, [Validators.required, Validators.min(0)]]
+    adultPrice: [null],
+    children: [0, [Validators.required, Validators.min(0)]],
+    childPrice: [null]
   });
   
   id: number | null = null;
@@ -106,7 +108,9 @@ export class ReservationFormComponent {
         reservationDate: formattedDate,
         notes: raw.notes || '',
         adults: Number(raw.adults),
-        children: Number(raw.children)
+        adultPrice: raw.adultPrice !== null && raw.adultPrice !== '' && raw.adultPrice !== undefined ? Number(raw.adultPrice) : null,
+        children: Number(raw.children),
+        childPrice: raw.childPrice !== null && raw.childPrice !== '' && raw.childPrice !== undefined ? Number(raw.childPrice) : null
       };
 
       const obs = this.id 

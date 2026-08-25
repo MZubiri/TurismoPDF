@@ -43,7 +43,9 @@ namespace TurismoPDF.Backend.Controllers
                     ReservationDate = r.ReservationDate,
                     Notes = r.Notes,
                     Adults = r.Adults,
+                    AdultPrice = r.AdultPrice,
                     Children = r.Children,
+                    ChildPrice = r.ChildPrice,
                     PdfFileNameEs = r.PdfFileNameEs,
                     PdfFileNameEn = r.PdfFileNameEn,
                     CreatedAt = r.CreatedAt,
@@ -75,7 +77,9 @@ namespace TurismoPDF.Backend.Controllers
                 ReservationDate = r.ReservationDate,
                 Notes = r.Notes,
                 Adults = r.Adults,
+                AdultPrice = r.AdultPrice,
                 Children = r.Children,
+                ChildPrice = r.ChildPrice,
                 PdfFileNameEs = r.PdfFileNameEs,
                 PdfFileNameEn = r.PdfFileNameEn,
                 CreatedAt = r.CreatedAt,
@@ -97,7 +101,9 @@ namespace TurismoPDF.Backend.Controllers
                 ReservationDate = dto.ReservationDate,
                 Notes = dto.Notes,
                 Adults = dto.Adults,
-                Children = dto.Children
+                AdultPrice = dto.AdultPrice,
+                Children = dto.Children,
+                ChildPrice = dto.ChildPrice
             };
 
             _context.Reservations.Add(reservation);
@@ -133,7 +139,9 @@ namespace TurismoPDF.Backend.Controllers
                 ReservationDate = reservation.ReservationDate,
                 Notes = reservation.Notes,
                 Adults = reservation.Adults,
+                AdultPrice = reservation.AdultPrice,
                 Children = reservation.Children,
+                ChildPrice = reservation.ChildPrice,
                 PdfFileNameEs = createdRes?.PdfFileNameEs,
                 PdfFileNameEn = createdRes?.PdfFileNameEn,
                 CreatedAt = reservation.CreatedAt,
@@ -156,7 +164,9 @@ namespace TurismoPDF.Backend.Controllers
             reservation.ReservationDate = dto.ReservationDate;
             reservation.Notes = dto.Notes;
             reservation.Adults = dto.Adults;
+            reservation.AdultPrice = dto.AdultPrice;
             reservation.Children = dto.Children;
+            reservation.ChildPrice = dto.ChildPrice;
             reservation.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

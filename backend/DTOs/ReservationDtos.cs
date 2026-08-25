@@ -23,7 +23,9 @@ namespace TurismoPDF.Backend.DTOs
         public DateOnly ReservationDate { get; set; }
         public string? Notes { get; set; }
         public int Adults { get; set; }
+        public decimal? AdultPrice { get; set; }
         public int Children { get; set; }
+        public decimal? ChildPrice { get; set; }
         public string? PdfFileNameEs { get; set; }
         public string? PdfFileNameEn { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -41,7 +43,9 @@ namespace TurismoPDF.Backend.DTOs
         public DateOnly ReservationDate { get; set; }
         public string? Notes { get; set; }
         public int Adults { get; set; }
+        public decimal? AdultPrice { get; set; }
         public int Children { get; set; }
+        public decimal? ChildPrice { get; set; }
     }
 
     public class UpdateReservationDto : CreateReservationDto { }

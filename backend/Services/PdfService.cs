@@ -36,9 +36,12 @@ namespace TurismoPDF.Backend.Services
             var fullName = $"{reservation.FirstName} {reservation.LastName}".ToUpper();
             var destName = reservation.Destination?.Name?.ToUpper() ?? "-";
             var tourName = reservation.Activity?.Name?.ToUpper() ?? "-";
-            var dateStr = reservation.ReservationDate.ToString("dd 'DE' MMMM 'DEL' yyyy").ToUpper();
-            if (!isEs)
-                dateStr = reservation.ReservationDate.ToString("MMMM dd, yyyy").ToUpper();
+            
+            var cultureEs = new System.Globalization.CultureInfo("es-MX");
+            var cultureEn = new System.Globalization.CultureInfo("en-US");
+            var dateStr = isEs
+                ? reservation.ReservationDate.ToString("dd 'DE' MMMM 'DEL' yyyy", cultureEs).ToUpper()
+                : reservation.ReservationDate.ToString("MMMM dd, yyyy", cultureEn).ToUpper();
 
             // Disclaimers
             var disclaimerEs = "EL DINERO NO SERÁ REEMBOLSABLE SI EL PASAJERO PIERDE LA EXCURSIÓN POR NO ESTAR A LA HORA INDICADA, AL IGUAL QUE LAS EXCURSIONES NO TOMADAS. RESERVAS.TOURSGOTRAVEL.COM ACTÚA COMO INTERMEDIARIO ENTRE EL PASAJERO Y EL PRESTADOR DE SERVICIOS, POR LO QUE NOS DESLINDAMOS DE RESPONSABILIDADES INHERENTES A DEMORAS O IMPREVISTOS. PARA CUALQUIER ACLARACIÓN FAVOR DE COMUNICARSE AL:";
@@ -67,11 +70,11 @@ namespace TurismoPDF.Backend.Services
             byte[]? logoBytes = File.Exists(logoPath) ? File.ReadAllBytes(logoPath) : null;
             byte[]? subtleBgBytes = File.Exists(subtleBgPath) ? File.ReadAllBytes(subtleBgPath) : null;
 
-            // Generate QR Code
+            // Generate QR Code pointing to toursgotravel.com
             byte[] qrImageBytes;
             using (var qrGenerator = new QRCodeGenerator())
             {
-                var qrCodeData = qrGenerator.CreateQrCode("https://reservas.toursgotravel.com", QRCodeGenerator.ECCLevel.M);
+                var qrCodeData = qrGenerator.CreateQrCode("https://toursgotravel.com/", QRCodeGenerator.ECCLevel.M);
                 using (var qrCode = new PngByteQRCode(qrCodeData))
                 {
                     qrImageBytes = qrCode.GetGraphic(8);
@@ -167,6 +170,20 @@ namespace TurismoPDF.Backend.Services
                         }
 
                         // === Passenger Breakdown Table (Large Header & Body Fonts) ===
+                        var hasAdultPrice = reservation.AdultPrice.HasValue && reservation.AdultPrice.Value > 0;
+                        var adultPriceStr = hasAdultPrice ? $"${reservation.AdultPrice!.Value:N2}" : (isEs ? "PAGADO" : "PAID");
+                        var adultTotal = (reservation.AdultPrice ?? 0) * reservation.Adults;
+                        var adultAmountStr = hasAdultPrice ? $"${adultTotal:N2}" : (isEs ? "PAGADO" : "PAID");
+
+                        var hasChildPrice = reservation.ChildPrice.HasValue && reservation.ChildPrice.Value > 0;
+                        var childPriceStr = hasChildPrice ? $"${reservation.ChildPrice!.Value:N2}" : (isEs ? "PAGADO" : "PAID");
+                        var childTotal = (reservation.ChildPrice ?? 0) * reservation.Children;
+                        var childAmountStr = hasChildPrice ? $"${childTotal:N2}" : (isEs ? "PAGADO" : "PAID");
+
+                        var hasCustomPricing = hasAdultPrice || hasChildPrice;
+                        var grandTotal = adultTotal + childTotal;
+                        var grandTotalAmountStr = hasCustomPricing ? $"${grandTotal:N2}" : (isEs ? "PAGADO" : "PAID");
+
                         mainCol.Item().PaddingBottom(16).Table(table =>
                         {
                             table.ColumnsDefinition(columns =>
@@ -193,9 +210,9 @@ namespace TurismoPDF.Backend.Services
                             table.Cell().Background(cardBg).Border(0.5f).BorderColor(borderColor).Padding(5f)
                                 .Text(reservation.Adults.ToString()).FontSize(bodyFontSize).Bold().AlignCenter();
                             table.Cell().Background(cardBg).Border(0.5f).BorderColor(borderColor).Padding(5f)
-                                .Text(isEs ? "PAGADO" : "PAID").FontSize(bodyFontSize).Bold().FontColor(brandBlueGreen).AlignCenter();
+                                .Text(adultPriceStr).FontSize(bodyFontSize).Bold().FontColor(brandBlueGreen).AlignCenter();
                             table.Cell().Background(cardBg).Border(0.5f).BorderColor(borderColor).Padding(5f)
-                                .Text(isEs ? "PAGADO" : "PAID").FontSize(bodyFontSize).Bold().FontColor(brandBlueGreen).AlignCenter();
+                                .Text(adultAmountStr).FontSize(bodyFontSize).Bold().FontColor(brandBlueGreen).AlignCenter();
 
                             // Children row
                             if (reservation.Children > 0)
@@ -205,9 +222,9 @@ namespace TurismoPDF.Backend.Services
                                 table.Cell().Background(cardBg).Border(0.5f).BorderColor(borderColor).Padding(5f)
                                     .Text(reservation.Children.ToString()).FontSize(bodyFontSize).Bold().AlignCenter();
                                 table.Cell().Background(cardBg).Border(0.5f).BorderColor(borderColor).Padding(5f)
-                                    .Text(isEs ? "PAGADO" : "PAID").FontSize(bodyFontSize).Bold().FontColor(brandBlueGreen).AlignCenter();
+                                    .Text(childPriceStr).FontSize(bodyFontSize).Bold().FontColor(brandBlueGreen).AlignCenter();
                                 table.Cell().Background(cardBg).Border(0.5f).BorderColor(borderColor).Padding(5f)
-                                    .Text(isEs ? "PAGADO" : "PAID").FontSize(bodyFontSize).Bold().FontColor(brandBlueGreen).AlignCenter();
+                                    .Text(childAmountStr).FontSize(bodyFontSize).Bold().FontColor(brandBlueGreen).AlignCenter();
                             }
 
                             // Total row
@@ -218,7 +235,7 @@ namespace TurismoPDF.Backend.Services
                             table.Cell().Background(tableTotalBg).Border(0.5f).BorderColor(borderColor).Padding(5f)
                                 .Text(isEs ? "TOTAL" : "TOTAL").FontSize(bodyFontSize).Bold().FontColor(brandBlue).AlignCenter();
                             table.Cell().Background(tableTotalBg).Border(0.5f).BorderColor(borderColor).Padding(5f)
-                                .Text(isEs ? "PAGADO" : "PAID").FontSize(bodyFontSize).Bold().FontColor(brandBlueGreen).AlignCenter();
+                                .Text(grandTotalAmountStr).FontSize(bodyFontSize).Bold().FontColor(brandBlueGreen).AlignCenter();
                         });
 
                         // === PROMINENT & LARGE DISCLAIMERS & QR CODE SECTION ===

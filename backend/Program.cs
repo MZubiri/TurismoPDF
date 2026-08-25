@@ -85,6 +85,16 @@ using (var scope = app.Services.CreateScope())
         if (!provider.Equals("MySql", StringComparison.OrdinalIgnoreCase))
         {
             context.Database.EnsureCreated();
+            try
+            {
+                context.Database.ExecuteSqlRaw("ALTER TABLE Reservations ADD COLUMN AdultPrice NUMERIC;");
+            }
+            catch { /* Column already exists */ }
+            try
+            {
+                context.Database.ExecuteSqlRaw("ALTER TABLE Reservations ADD COLUMN ChildPrice NUMERIC;");
+            }
+            catch { /* Column already exists */ }
         }
         else
         {
@@ -94,6 +104,16 @@ using (var scope = app.Services.CreateScope())
     catch
     {
         context.Database.EnsureCreated();
+        try
+        {
+            context.Database.ExecuteSqlRaw("ALTER TABLE Reservations ADD COLUMN AdultPrice NUMERIC;");
+        }
+        catch { }
+        try
+        {
+            context.Database.ExecuteSqlRaw("ALTER TABLE Reservations ADD COLUMN ChildPrice NUMERIC;");
+        }
+        catch { }
     }
 
     if (!context.Users.Any())
