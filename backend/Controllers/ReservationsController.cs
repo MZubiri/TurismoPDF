@@ -212,22 +212,41 @@ namespace TurismoPDF.Backend.Controllers
             return Ok(new { FileName = fileName });
         }
 
+        [HttpGet("voucher/{id}")]
         [HttpGet("{id}/pdf")]
         public async Task<IActionResult> DownloadPdf(int id, [FromQuery] string lang = "es")
         {
-            var reservation = await _context.Reservations.FindAsync(id);
-            if (reservation == null) return NotFound();
+            var reservation = await _context.Reservations
+                .Include(r => r.Destination)
+                .Include(r => r.Activity)
+                .FirstOrDefaultAsync(r => r.Id == id);
 
-            var fileName = lang.ToLower() == "es" ? reservation.PdfFileNameEs : reservation.PdfFileNameEn;
-            if (string.IsNullOrEmpty(fileName)) return NotFound("PDF not generated yet.");
+            if (reservation == null) return NotFound("Reserva no encontrada.");
+
+            var isEs = (lang ?? "es").ToLower() == "es";
+            var cleanLang = isEs ? "ES" : "EN";
+            var cleanFolio = $"GT-{reservation.CreatedAt.Year}-{reservation.Id:D5}";
+            var downloadName = $"Voucher_ToursGoTravel_{cleanFolio}_{cleanLang}.pdf";
 
             var pdfsFolder = Path.Combine(_env.ContentRootPath, "pdfs");
-            var filePath = Path.Combine(pdfsFolder, fileName);
+            if (!Directory.Exists(pdfsFolder))
+                Directory.CreateDirectory(pdfsFolder);
 
-            if (!System.IO.File.Exists(filePath)) return NotFound("File not found.");
+            var fileName = isEs ? reservation.PdfFileNameEs : reservation.PdfFileNameEn;
+            var filePath = !string.IsNullOrEmpty(fileName) ? Path.Combine(pdfsFolder, fileName) : null;
 
-            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return new FileStreamResult(stream, "application/pdf") { FileDownloadName = fileName };
+            if (string.IsNullOrEmpty(fileName) || filePath == null || !System.IO.File.Exists(filePath))
+            {
+                var settings = await _context.PdfSettings.FirstOrDefaultAsync() ?? new PdfSettings();
+                fileName = _pdfService.GenerateVoucherPdf(reservation, settings, lang ?? "es", pdfsFolder);
+                if (isEs) reservation.PdfFileNameEs = fileName;
+                else reservation.PdfFileNameEn = fileName;
+                await _context.SaveChangesAsync();
+                filePath = Path.Combine(pdfsFolder, fileName);
+            }
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return File(stream, "application/pdf", downloadName, enableRangeProcessing: true);
         }
     }
 }

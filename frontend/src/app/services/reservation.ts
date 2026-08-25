@@ -14,14 +14,13 @@ export class ReservationService {
   delete(id: number) { return this.http.delete(`${this.apiUrl}/${id}`); }
 
   downloadPdf(id: number, lang: string) {
-    return this.http.get(`${this.apiUrl}/${id}/pdf?lang=${lang}`, { responseType: 'blob' }).subscribe(blob => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `reservation-${id}-${lang}.pdf`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    });
+    const url = `${this.apiUrl}/voucher/${id}?lang=${lang}`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   generatePdf(id: number, lang: string) {
