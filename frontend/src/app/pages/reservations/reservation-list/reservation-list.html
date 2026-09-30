@@ -6,72 +6,74 @@
     </button>
   </div>
   
-  <div class="table-responsive mat-elevation-z8" style="border-radius: 8px; overflow: hidden; background: #ffffff;">
-    <table mat-table [dataSource]="dataSource">
-      <ng-container matColumnDef="folio">
-        <th mat-header-cell *matHeaderCellDef> Folio </th>
-        <td mat-cell *matCellDef="let element"> <b>{{element.folio}}</b> </td>
-      </ng-container>
+  <div class="table-card mat-elevation-z8">
+    <div class="table-responsive">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="folio">
+          <th mat-header-cell *matHeaderCellDef> Folio </th>
+          <td mat-cell *matCellDef="let element"> <b>{{element.folio}}</b> </td>
+        </ng-container>
 
-      <ng-container matColumnDef="fullName">
-        <th mat-header-cell *matHeaderCellDef> Nombre </th>
-        <td mat-cell *matCellDef="let element"> {{element.firstName}} {{element.lastName}} </td>
-      </ng-container>
+        <ng-container matColumnDef="fullName">
+          <th mat-header-cell *matHeaderCellDef> Nombre </th>
+          <td mat-cell *matCellDef="let element"> {{element.firstName}} {{element.lastName}} </td>
+        </ng-container>
 
-      <ng-container matColumnDef="destination">
-        <th mat-header-cell *matHeaderCellDef> Destino </th>
-        <td mat-cell *matCellDef="let element"> {{element.destination?.name}} </td>
-      </ng-container>
+        <ng-container matColumnDef="destination">
+          <th mat-header-cell *matHeaderCellDef> Destino </th>
+          <td mat-cell *matCellDef="let element"> {{element.destination?.name}} </td>
+        </ng-container>
 
-      <ng-container matColumnDef="activity">
-        <th mat-header-cell *matHeaderCellDef> Actividad </th>
-        <td mat-cell *matCellDef="let element"> {{element.activity?.name}} </td>
-      </ng-container>
+        <ng-container matColumnDef="activity">
+          <th mat-header-cell *matHeaderCellDef> Actividad </th>
+          <td mat-cell *matCellDef="let element"> {{element.activity?.name}} </td>
+        </ng-container>
 
-      <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef> Fecha </th>
-        <td mat-cell *matCellDef="let element"> {{element.reservationDate | date:'mediumDate'}} </td>
-      </ng-container>
-      
-      <ng-container matColumnDef="passengers">
-        <th mat-header-cell *matHeaderCellDef> Pasajeros </th>
-        <td mat-cell *matCellDef="let element">
-          <div>Ad: {{element.adults}} | Ni: {{element.children}}</div>
-          @if (element.adultPrice || element.childPrice) {
-            <small style="color: #00A896; font-weight: 700; display: block; font-size: 0.8rem;">
-              Total: ${{((element.adultPrice || 0) * element.adults + (element.childPrice || 0) * element.children) | number:'1.2-2'}}
-            </small>
-          }
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef> Fecha </th>
+          <td mat-cell *matCellDef="let element"> {{element.reservationDate | date:'mediumDate'}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="passengers">
+          <th mat-header-cell *matHeaderCellDef> Pasajeros </th>
+          <td mat-cell *matCellDef="let element">
+            <div>Ad: {{element.adults}} | Ni: {{element.children}}</div>
+            @if (element.adultPrice || element.childPrice) {
+              <small style="color: #00A896; font-weight: 700; display: block; font-size: 0.8rem;">
+                Total: ${{((element.adultPrice || 0) * element.adults + (element.childPrice || 0) * element.children) | number:'1.2-2'}}
+              </small>
+            }
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Acciones </th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button (click)="sendClientWhatsApp(element)" title="Enviar Confirmación por WhatsApp al Cliente" style="color: #25D366;">
-            <mat-icon>chat</mat-icon>
-          </button>
-          <button mat-icon-button (click)="shareWhatsApp(element, 'es')" title="Compartir solo Enlace de PDF (WhatsApp)" style="color: #00A896;">
-            <mat-icon>link</mat-icon>
-          </button>
-          <button mat-icon-button color="primary" [routerLink]="['/reservations/edit', element.id]" title="Editar Reserva">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteReservation(element.id)" title="Eliminar Reserva">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button mat-icon-button (click)="downloadPdf(element.id, 'es')" title="Descargar PDF (ES / MX)">
-            <span>🇲🇽</span>
-          </button>
-          <button mat-icon-button (click)="downloadPdf(element.id, 'en')" title="Descargar PDF (EN)">
-            <span>🇺🇸</span>
-          </button>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="sendClientWhatsApp(element)" title="Enviar Confirmación por WhatsApp al Cliente" style="color: #25D366;">
+              <mat-icon>chat</mat-icon>
+            </button>
+            <button mat-icon-button (click)="shareWhatsApp(element, 'es')" title="Compartir solo Enlace de PDF (WhatsApp)" style="color: #00A896;">
+              <mat-icon>link</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" [routerLink]="['/reservations/edit', element.id]" title="Editar Reserva">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteReservation(element.id)" title="Eliminar Reserva">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-icon-button (click)="downloadPdf(element.id, 'es')" title="Descargar PDF (ES / MX)">
+              <span>🇲🇽</span>
+            </button>
+            <button mat-icon-button (click)="downloadPdf(element.id, 'en')" title="Descargar PDF (EN)">
+              <span>🇺🇸</span>
+            </button>
+          </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
 
     <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons aria-label="Seleccionar página de reservas">
     </mat-paginator>
