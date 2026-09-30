@@ -1,7 +1,8 @@
-import { Component, inject, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ReservationService } from '../../../services/reservation';
@@ -9,24 +10,34 @@ import { ReservationService } from '../../../services/reservation';
 @Component({
   selector: 'app-reservation-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatTableModule, MatButtonModule, MatIconModule, DatePipe],
+  imports: [CommonModule, RouterModule, MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule, DatePipe],
   templateUrl: './reservation-list.html',
   styleUrls: ['./reservation-list.scss']
 })
-export class ReservationListComponent {
+export class ReservationListComponent implements AfterViewInit {
   private resService = inject(ReservationService);
   private cdr = inject(ChangeDetectorRef);
   
-  reservations = signal<any[]>([]);
+  dataSource = new MatTableDataSource<any>([]);
   displayedColumns = ['folio', 'fullName', 'destination', 'activity', 'date', 'passengers', 'actions'];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit() {
     this.loadReservations();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
   loadReservations() {
     this.resService.getAll().subscribe(res => {
-      this.reservations.set(res);
+      const sorted = [...res].sort((a, b) => b.id - a.id);
+      this.dataSource.data = sorted;
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+      }
       this.cdr.markForCheck();
     });
   }

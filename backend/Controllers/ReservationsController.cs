@@ -29,6 +29,7 @@ namespace TurismoPDF.Backend.Controllers
             return await _context.Reservations
                 .Include(r => r.Destination)
                 .Include(r => r.Activity)
+                .OrderByDescending(r => r.Id)
                 .Select(r => new ReservationDto
                 {
                     Id = r.Id,
@@ -152,7 +153,10 @@ namespace TurismoPDF.Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, UpdateReservationDto dto)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await _context.Reservations
+                .Include(r => r.Destination)
+                .Include(r => r.Activity)
+                .FirstOrDefaultAsync(r => r.Id == id);
             if (reservation == null) return NotFound();
 
             reservation.FirstName = dto.FirstName;
@@ -170,6 +174,18 @@ namespace TurismoPDF.Backend.Controllers
             reservation.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+
+            await _context.Entry(reservation).Reference(r => r.Destination).LoadAsync();
+            await _context.Entry(reservation).Reference(r => r.Activity).LoadAsync();
+
+            var settings = await _context.PdfSettings.FirstOrDefaultAsync() ?? new PdfSettings();
+            var pdfsFolder = Path.Combine(_env.ContentRootPath, "pdfs");
+            if (!Directory.Exists(pdfsFolder)) Directory.CreateDirectory(pdfsFolder);
+
+            reservation.PdfFileNameEs = _pdfService.GenerateVoucherPdf(reservation, settings, "es", pdfsFolder);
+            reservation.PdfFileNameEn = _pdfService.GenerateVoucherPdf(reservation, settings, "en", pdfsFolder);
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
 
@@ -245,6 +261,7 @@ namespace TurismoPDF.Backend.Controllers
                 filePath = Path.Combine(pdfsFolder, fileName);
             }
 
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
             var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             return File(stream, "application/pdf", downloadName, enableRangeProcessing: true);
         }

@@ -14,7 +14,7 @@ export class ReservationService {
   delete(id: number) { return this.http.delete(`${this.apiUrl}/${id}`); }
 
   downloadPdf(id: number, lang: string) {
-    const url = `${this.apiUrl}/${id}/pdf?lang=${lang}`;
+    const url = `${this.apiUrl}/${id}/pdf?lang=${lang}&t=${new Date().getTime()}`;
     const a = document.createElement('a');
     a.href = url;
     a.target = '_blank';
